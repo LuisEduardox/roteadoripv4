@@ -22,6 +22,14 @@ public class Roteador {
 
     // Funcionalidades
 
+    public void cadastrarInterface(Interface interfac){
+        this.interfaces.add(interfac);
+    }
+
+    public void cadastrarRota(Rota rota){
+        this.tabelaDeRotas.add(rota);
+    }
+
     // Getters
     public String getNome() {
         return nome;
