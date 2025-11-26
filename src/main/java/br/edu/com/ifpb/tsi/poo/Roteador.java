@@ -26,10 +26,67 @@ public class Roteador {
         this.interfaces.add(interfac);
     }
 
-    public void cadastrarRota(Rota rota){
+    private int buscarIndiceRota(Rota rota) {
+    String destinoBusca = rota.getDestino();
+    String mascaraBusca = rota.getMascara();
+    String gatewayBusca = rota.getGateway();
+
+    for (int i = 0; i < this.tabelaDeRotas.size(); i++) {
+        Rota rotaLista = this.tabelaDeRotas.get(i);
+
+        if (rotaLista.getDestino().trim().equals(destinoBusca.trim()) &&
+            rotaLista.getMascara().trim().equals(mascaraBusca.trim()) &&
+            rotaLista.getGateway().trim().equals(gatewayBusca.trim())){
+
+            return i; 
+        }
+    }
+
+    return -1; 
+}
+
+    public void cadastrarRota(Rota rota){ //Edu, vc não amelhor a gente colocar ao invés de void, String? para conseguir retornar mensagem de erro
+
+        if (rota == null){
+            return;
+        }
+
+        if(buscarIndiceRota(rota) != -1){
+            return;
+        }
+
         this.tabelaDeRotas.add(rota);
     }
 
+    public void alterarRota(Rota rotaAlterada){
+        if (rotaAlterada == null){
+            return;
+        }
+
+        int indiceRotaAntiga = buscarIndiceRota(rotaAlterada);
+
+        if(indiceRotaAntiga != -1){
+            this.tabelaDeRotas.set(indiceRotaAntiga, rotaAlterada);
+        } else {
+            return;
+        }
+    }
+
+    public void removerRota(Rota rotaRemover){
+        if (rotaRemover == null){
+            return;
+        }
+
+        int indiceEncontrado = buscarIndiceRota(rotaRemover);
+
+        if(indiceEncontrado != -1){
+            this.tabelaDeRotas.remove(indiceEncontrado);
+        } else {
+            return;
+        }
+
+
+    }
     // Getters
     public String getNome() {
         return nome;
