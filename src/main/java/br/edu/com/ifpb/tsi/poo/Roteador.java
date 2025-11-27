@@ -22,6 +22,23 @@ public class Roteador {
 
     // Funcionalidades
 
+    public String exibiTabelaDeRotas(){
+        String tabela = "Destino      Gateway      Mascara      Interface\n";
+
+        for(int i = 0; i < tabelaDeRotas.size(); i++){
+            Rota rota = tabelaDeRotas.get(i);
+            
+            String destino = rota.getDestino();
+            String gateway = rota.getGateway();
+            String mascara = rota.getMascara();
+            String interfac = rota.getInterfaceNome().getNome();
+
+            tabela += destino + "   " + gateway + "   " + mascara + "   " + interfac + " \n";
+        }
+
+        return tabela;
+    }
+
     public void cadastrarInterface(Interface interfac){
         this.interfaces.add(interfac);
     }
@@ -45,7 +62,7 @@ public class Roteador {
     return -1; 
 }
 
-    public void cadastrarRota(Rota rota){ //Edu, vc não amelhor a gente colocar ao invés de void, String? para conseguir retornar mensagem de erro
+    public void cadastrarRota(Rota rota){ //Edu, vc não acha melhor a gente colocar ao invés de void, String? para conseguir retornar mensagem de erro
 
         if (rota == null){
             return;
@@ -109,4 +126,9 @@ public class Roteador {
         this.interfaces = interfaces;
     }
 
+    public String toString(){
+        return getNome();
+    }
+
 }
+
