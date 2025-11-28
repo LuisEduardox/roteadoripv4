@@ -25,13 +25,20 @@ public class Main {
         Roteador r1 =  new Roteador("R1");
         System.out.println(r1);
         System.out.println(r1.exibiTabelaDeRotas());
+        System.out.println(r1.exibiInterfaces());
         
         System.out.println();
         
         System.out.println("----- Depois -----");
         System.out.println();
-
+        
+        System.out.println(r1);
         r1.cadastrarRota(rota1);
+        r1.cadastrarRota(rota1);
+        r1.cadastrarInterface(interface1);
+        r1.cadastrarInterface(interface1);
+
         System.out.println(r1.exibiTabelaDeRotas());
+        System.out.println(r1.exibiInterfaces());
     }
 }

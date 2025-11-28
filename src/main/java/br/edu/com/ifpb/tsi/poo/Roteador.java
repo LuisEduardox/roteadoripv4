@@ -39,8 +39,36 @@ public class Roteador {
         return tabela;
     }
 
+    public String exibiInterfaces(){
+        String tabela = "Interface      IP\n";
+
+        for(int i = 0; i < interfaces.size(); i++){
+            Interface interfac = interfaces.get(i);
+            
+            String nome = interfac.getNome();
+            String ip = interfac.getEnderecoIP();
+
+            tabela += nome + "            " + ip + " \n";
+        }
+
+        return tabela;
+    }
+
     public void cadastrarInterface(Interface interfac){
-        this.interfaces.add(interfac);
+        boolean x = true;
+        for(int i = 0 ; i < interfaces.size(); i++){
+            if(interfaces.get(i).getNome() == interfac.getNome()){
+                x = false;
+            }
+        }
+
+        if(interfac == null){
+            return;
+        }
+
+        if(x){
+            this.interfaces.add(interfac);
+        }
     }
 
     private int buscarIndiceRota(Rota rota) {
