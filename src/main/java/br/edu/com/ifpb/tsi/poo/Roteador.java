@@ -90,8 +90,7 @@ public class Roteador {
     return -1; 
 }
 
-    public void cadastrarRota(Rota rota){ //Edu, vc não acha melhor a gente colocar ao invés de void, String? para conseguir retornar mensagem de erro
-
+    public void cadastrarRota(Rota rota){ 
         if (rota == null){
             return;
         }
