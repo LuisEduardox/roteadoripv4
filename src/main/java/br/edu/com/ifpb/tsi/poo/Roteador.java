@@ -7,22 +7,46 @@ public class Roteador {
     private String nome;
     private List<Rota> tabelaDeRotas;
     private List<Interface> interfaces;
+    private ModoExibicao modoExibicao;
 
     // Construtores
         public Roteador(){
             this.tabelaDeRotas = new ArrayList<>();
             this.interfaces = new ArrayList<>();
+            this.modoExibicao = ModoExibicao.MASCARA;
     }
     
     public Roteador(String nome){
         this.nome = nome;
         this.tabelaDeRotas = new ArrayList<>();
         this.interfaces = new ArrayList<>();
+        this.modoExibicao = ModoExibicao.MASCARA;
     }
 
     // Funcionalidades
 
+    private int mascaraParaCIDR(String mascara) {
+        String[] octetos = mascara.split("\\.");
+        int cidr = 0;
+        
+        for (String octeto : octetos) {
+            int valor = Integer.parseInt(octeto);
+            String binario = Integer.toBinaryString(valor);
+            cidr += binario.replace("0", "").length();
+        }
+        
+        return cidr;
+    }
+
     public String exibiTabelaDeRotas(){
+        if(this.modoExibicao == ModoExibicao.CIDR){
+            return exibiTabelaDeRotasCIDR();
+        } else {
+            return exibiTabelaDeRotasMascara();
+        }
+    }
+
+    public String exibiTabelaDeRotasMascara(){
         String tabela = "Destino      Gateway      Mascara      Interface\n";
 
         if(this.tabelaDeRotas.isEmpty()){
@@ -38,6 +62,27 @@ public class Roteador {
             String interfac = rota.getInterfaceNome().getNome();
 
             tabela += destino + "   " + gateway + "   " + mascara + "   " + interfac + " \n";
+        }
+
+        return tabela;
+    }
+
+    public String exibiTabelaDeRotasCIDR(){
+        String tabela = "Destino/CIDR      Gateway      Interface\n";
+
+        if(this.tabelaDeRotas.isEmpty()){
+        return "Tabela de rotas vazia.";
+    }
+
+        for(int i = 0; i < tabelaDeRotas.size(); i++){
+            Rota rota = tabelaDeRotas.get(i);
+            
+            String destino = rota.getDestino();
+            String gateway = rota.getGateway();
+            int cidr = mascaraParaCIDR(rota.getMascara());
+            String interfac = rota.getInterfaceNome().getNome();
+
+            tabela += destino + "/" + cidr + "   " + gateway + "   " + interfac + " \n";
         }
 
         return tabela;
@@ -184,6 +229,9 @@ public class Roteador {
     public List<Interface> getInterfaces() {
         return interfaces;
     }
+    public ModoExibicao getModoExibicao() {
+        return modoExibicao;
+    }
 
     // Setters
     public void setNome(String nome) {
@@ -194,6 +242,9 @@ public class Roteador {
     }
     public void setInterfaces(List<Interface> interfaces) {
         this.interfaces = interfaces;
+    }
+    public void setModoExibicao(ModoExibicao modoExibicao) {
+        this.modoExibicao = modoExibicao;
     }
 
     public String toString(){
