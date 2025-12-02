@@ -10,8 +10,8 @@ public class Roteador {
 
     // Construtores
         public Roteador(){
-        this.tabelaDeRotas = new ArrayList<>();
-        this.interfaces = new ArrayList<>();
+            this.tabelaDeRotas = new ArrayList<>();
+            this.interfaces = new ArrayList<>();
     }
     
     public Roteador(String nome){
@@ -24,6 +24,10 @@ public class Roteador {
 
     public String exibiTabelaDeRotas(){
         String tabela = "Destino      Gateway      Mascara      Interface\n";
+
+        if(this.tabelaDeRotas.isEmpty()){
+        return "Tabela de rotas vazia.";
+    }
 
         for(int i = 0; i < tabelaDeRotas.size(); i++){
             Rota rota = tabelaDeRotas.get(i);
@@ -39,8 +43,23 @@ public class Roteador {
         return tabela;
     }
 
-    public void cadastrarInterface(Interface interfac){
-        this.interfaces.add(interfac);
+    public boolean cadastrarInterface(Interface novaInterface){
+        for (Interface i : this.interfaces){
+            if(i.getNome().equalsIgnoreCase(novaInterface.getNome())){
+                return false;
+            }
+        }
+        this.interfaces.add(novaInterface);
+        return true;
+    }
+
+    public Interface buscarInterfaceNome(String nome){
+        for(Interface i : this.interfaces){
+           if(i.getNome().equalsIgnoreCase(nome)){
+            return i;
+           }
+        }
+        return null;
     }
 
     private int buscarIndiceRota(Rota rota) {
@@ -62,17 +81,18 @@ public class Roteador {
     return -1; 
 }
 
-    public void cadastrarRota(Rota rota){ //Edu, vc não acha melhor a gente colocar ao invés de void, String? para conseguir retornar mensagem de erro
+    public boolean cadastrarRota(Rota rota){ 
 
         if (rota == null){
-            return;
+            return false;
         }
 
         if(buscarIndiceRota(rota) != -1){
-            return;
+            return false;
         }
 
         this.tabelaDeRotas.add(rota);
+        return true;
     }
 
     public void alterarRota(Rota rotaAlterada){
@@ -102,8 +122,58 @@ public class Roteador {
             return;
         }
 
-
     }
+
+    public void resetarTabela(){
+        this.tabelaDeRotas.clear();
+    }
+
+    // A lógica agora é dp longest mach, vou te explicar direitinha por que é muito complexo ai vou te explicar bireitinho
+
+    private long ipLong(String ip){ //como a gente tá pegando o ip do nosso usuário em string, vou convereter ele para long para poder fazer a conta, "mas pq long?" eu pesquisei a melhor forma de fazer esse calculo e com long é melhor por que tem menos chance de dá erro
+     String partes[] = ip.trim().split("\\.");
+     long resultado = 0;
+     for (int i=0; i < 4; i++){
+        int parte = Integer.parseInt(partes[i]); 
+        
+        resultado = resultado * 256;   //Multiplico por 256, para preencher as 4 "casas" do ip
+        resultado = resultado + parte; //coloco na casinha
+        
+     }
+     return resultado;
+    }
+
+   public Rota rotear(String ipDestino){
+    if(this.tabelaDeRotas.isEmpty()){
+        return null;
+    }
+    try{
+        long ipDestinoLong = ipLong(ipDestino); // a gente vai transformar o ip do nosso usuário em long
+        Rota melhorRota = null;
+        long maiorMascara = -1; //guaradr a máscara que melhor se encaixa
+
+        for(Rota rota: this.tabelaDeRotas){
+            long redeRota = ipLong(rota.getDestino());
+            long mascaraRota = ipLong(rota.getMascara());
+
+        // agr vou usar a lógica que o professor ensinou sexta
+        if ((ipDestinoLong & mascaraRota) == (redeRota & mascaraRota)){ 
+            if(mascaraRota > maiorMascara){
+                maiorMascara = mascaraRota;
+                melhorRota = rota;
+             }
+        }
+    }
+
+    return melhorRota;
+        
+    } catch(Exception e) {
+        System.out.println("Erro ao processar IP: " + e.getMessage());
+        return null;
+    }
+
+   }
+    
     // Getters
     public String getNome() {
         return nome;
@@ -131,4 +201,8 @@ public class Roteador {
     }
 
 }
+
+
+
+
 
