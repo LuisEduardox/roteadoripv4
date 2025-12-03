@@ -131,22 +131,41 @@ public class Main {
         System.out.println("Digite os dados da rota a ser alterada:");
         
         System.out.print("Destino: ");
-        String destino = scanner.nextLine();
+        String destinoAntigo = scanner.nextLine();
         System.out.print("Máscara: ");
-        String mascara = scanner.nextLine();
+        String mascaraAntiga = scanner.nextLine();
         System.out.print("Gateway: ");
-        String gateway = scanner.nextLine();
+        String gatewayAntigo = scanner.nextLine();
         System.out.print("Nome da Interface: ");
-        String nomeInterface = scanner.nextLine();
+        String nomeInterfaceAntiga = scanner.nextLine();
 
-        Interface interfaceEncontrada = roteador.buscarInterfaceNome(nomeInterface);
-        if (interfaceEncontrada == null) {
+        Interface interfaceAntigaEncontrada = roteador.buscarInterfaceNome(nomeInterfaceAntiga);
+        if (interfaceAntigaEncontrada == null) {
             System.out.println("Erro: Interface não encontrada!");
             return;
         }
 
-        Rota rotaAlterada = new Rota(destino, mascara, gateway, interfaceEncontrada);
-        roteador.alterarRota(rotaAlterada);
+        Rota rotaAntiga = new Rota(destinoAntigo, mascaraAntiga, gatewayAntigo, interfaceAntigaEncontrada);
+
+        System.out.println("\nDigite os novos dados da rota:");
+        
+        System.out.print("Novo Destino: ");
+        String destinoNovo = scanner.nextLine();
+        System.out.print("Nova Máscara: ");
+        String mascaraNova = scanner.nextLine();
+        System.out.print("Novo Gateway: ");
+        String gatewayNovo = scanner.nextLine();
+        System.out.print("Nome da Nova Interface: ");
+        String nomeInterfaceNova = scanner.nextLine();
+
+        Interface interfaceNovaEncontrada = roteador.buscarInterfaceNome(nomeInterfaceNova);
+        if (interfaceNovaEncontrada == null) {
+            System.out.println("Erro: Interface não encontrada!");
+            return;
+        }
+
+        Rota rotaNova = new Rota(destinoNovo, mascaraNova, gatewayNovo, interfaceNovaEncontrada);
+        roteador.alterarRota(rotaAntiga, rotaNova);
         System.out.println("Rota alterada com sucesso!");
     }
 
@@ -225,4 +244,6 @@ public class Main {
             }
         }
     }
+    // para rodar no terminal, com entrada de arquivo texto
+    // Get-Content input.txt | java -cp target/classes br.edu.com.ifpb.tsi.poo.Main
 }

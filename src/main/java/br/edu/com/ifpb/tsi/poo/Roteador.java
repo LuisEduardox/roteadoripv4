@@ -140,15 +140,15 @@ public class Roteador {
         return true;
     }
 
-    public void alterarRota(Rota rotaAlterada){
-        if (rotaAlterada == null){
+    public void alterarRota(Rota rotaAntiga, Rota rotaNova){
+        if (rotaAntiga == null || rotaNova == null){
             return;
         }
 
-        int indiceRotaAntiga = buscarIndiceRota(rotaAlterada);
+        int indiceRotaAntiga = buscarIndiceRota(rotaAntiga);
 
         if(indiceRotaAntiga != -1){
-            this.tabelaDeRotas.set(indiceRotaAntiga, rotaAlterada);
+            this.tabelaDeRotas.set(indiceRotaAntiga, rotaNova);
         } else {
             return;
         }
